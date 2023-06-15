@@ -3,7 +3,7 @@ from strawberry.extensions import Extension
 from strawberry.types import Info
 
 from fastgql.database import get_sessionmaker
-from fastgql.models import add_task, get_tasks
+from fastgql.models import add_task, complete_task, get_tasks
 
 from .definitions.task import Task, TaskInput
 
@@ -31,6 +31,11 @@ class Mutation:
     async def add_task(self, info: Info, task: TaskInput) -> Task:
         session = info.context["session"]
         return Task.from_pydantic(await add_task(session, task.to_pydantic()))  # type: ignore[attr-defined, no-any-return]
+
+    @strawberry.mutation
+    async def complete_task(self, info: Info, task_id: int) -> Task:
+        session = info.context["session"]
+        return Task.from_pydantic(await complete_task(session, task_id))  # type: ignore[attr-defined, no-any-return]
 
 
 schema = strawberry.Schema(

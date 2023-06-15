@@ -6,6 +6,10 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlmodel.sql.expression import Select
 
 
+class TaskNotFound(Exception):
+    """Task not found"""
+
+
 class Task(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str
@@ -34,6 +38,19 @@ async def add_task(
     task: Task,
 ) -> Task:
     session.add(task)
+    await session.commit()
+    await session.refresh(task)
+    return task
+
+
+async def complete_task(
+    session: AsyncSession,
+    task_id: int,
+) -> Task:
+    task = await session.get(Task, task_id)
+    if task is None:
+        raise TaskNotFound(f"Task with id {task_id} not found")
+    task.completed = True
     await session.commit()
     await session.refresh(task)
     return task
