@@ -1,5 +1,3 @@
-from typing import Optional
-
 import strawberry
 
 from fastgql.models import Task as TaskModel
