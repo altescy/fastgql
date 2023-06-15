@@ -1,5 +1,5 @@
 import strawberry
-from strawberry.extensions import Extension
+from strawberry.extensions import SchemaExtension
 from strawberry.types import Info
 
 from fastgql.database import get_sessionmaker
@@ -8,7 +8,7 @@ from fastgql.models import add_task, complete_task, get_tasks
 from .definitions.task import Task, TaskInput
 
 
-class SQLModelSession(Extension):  # type: ignore[misc]
+class SQLModelSession(SchemaExtension):
     def on_request_start(self) -> None:
         self.execution_context.context["session"] = get_sessionmaker()()
 
