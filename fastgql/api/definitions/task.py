@@ -12,5 +12,5 @@ class Task:
 
 @strawberry.experimental.pydantic.input(TaskModel)
 class TaskInput:
-    name: str
-    description: Optional[str] = None
+    name: strawberry.auto
+    description: strawberry.auto
