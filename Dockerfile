@@ -14,4 +14,4 @@ WORKDIR /app
 COPY --from=builder /app/requirements.txt .
 RUN pip install -r requirements.txt
 COPY fastgql/ ./fastgql/
-CMD ["uvicorn", "--factory", "fastgql:create_app"]
+ENTRYPOINT ["uvicorn", "--factory", "fastgql.app:create_app"]
