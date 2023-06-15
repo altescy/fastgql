@@ -22,7 +22,7 @@ class Query:
     async def get_incomplete_tasks(self, info: Info, limit: int = 10) -> list[Task]:
         session = info.context["session"]
         tasks = await get_tasks(session, completed=False, limit=limit)
-        return [Task.from_instance(task) for task in tasks]
+        return [Task.from_pydantic(task) for task in tasks]  # type: ignore[attr-defined]
 
 
 @strawberry.type
@@ -30,7 +30,7 @@ class Mutation:
     @strawberry.mutation
     async def add_task(self, info: Info, task: TaskInput) -> Task:
         session = info.context["session"]
-        return Task.from_instance(await add_task(session, task.as_instance()))
+        return Task.from_pydantic(await add_task(session, task.to_pydantic()))  # type: ignore[attr-defined, no-any-return]
 
 
 schema = strawberry.Schema(
